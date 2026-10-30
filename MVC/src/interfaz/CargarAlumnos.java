@@ -9,8 +9,12 @@ import modelo.Alumno;
 import modelo.Meses;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.*;
@@ -40,6 +44,8 @@ public class CargarAlumnos extends JPanel {
 	private JLabel lblDNI;
 	private JComboBox comboBoxMes;
 	private Meses m;
+	
+	private JPanel Mesaje = this;
 	public CargarAlumnos() {
 		setLayout(null);
 		setBounds(100, 100, 800, 500);
@@ -116,8 +122,15 @@ public class CargarAlumnos extends JPanel {
 		for(Meses m:m.values()) {
 			comboBoxMes.addItem(m);
 		}
-			
 		
+		
+		comboBoxMes.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				actualizarSpinner();
+			}
+		});
 	}
 	public void crearCheckBox() {
 		checkbox = new Checkbox("HIJOS?");
@@ -131,7 +144,7 @@ public class CargarAlumnos extends JPanel {
 		add(spinnerDia);
 		
 		spinnerAño = new JSpinner();
-		spinnerAño.setModel(new SpinnerNumberModel(1, 1, 2026, 1));
+		spinnerAño.setModel(new SpinnerNumberModel(1900, 1900, 2026, 1));
 		spinnerAño.setBounds(401, 135, 58, 20);
 		add(spinnerAño);
 		
@@ -140,17 +153,16 @@ public class CargarAlumnos extends JPanel {
 		botonCargar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				checkeoMeses((int) spinnerMes.getValue());
 				c.agregarAlumno(cargar());
-				
+				JOptionPane.showMessageDialog(Mesaje, "Se cargo una gran personita");
 			}
 		});
-		
 	}
 	
-	public void checkeoMeses(int id) {
+	public void actualizarSpinner() {
+		Meses mes = (Meses) comboBoxMes.getSelectedItem();
+		spinnerDia.setModel(new SpinnerNumberModel(1, 1, mes.getDia(), 1));
 		
-		validate();
 	}
 	
 	public Alumno cargar() {
@@ -158,7 +170,7 @@ public class CargarAlumnos extends JPanel {
 		//m.toString(); para pasar el nombre del enum a string
 		
 		int dia =(int) spinnerDia.getValue();
-		int mes = (int) comboBox.getSelectedIndex();
+		int mes = (int) comboBox.getSelectedIndex()+1;
 		int año = (int) spinnerAño.getValue();
 		LocalDate fechaCompleta = LocalDate.of(año, mes, dia);
 		
@@ -166,7 +178,7 @@ public class CargarAlumnos extends JPanel {
 		
 		boolean hijos = checkbox.getState();
 		
-		int idEstudio = (int) comboBox.getSelectedIndex();
+		int idEstudio = (int) comboBox.getSelectedIndex()+1;
 		
 		String dni = textFieldDNI.getText(); 
 		

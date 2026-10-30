@@ -20,7 +20,7 @@ public enum Meses {
 		this.dia = dia;
 	}
 	
-	int getDia(){
+	public int getDia(){
 		return dia;
 	}
 }
